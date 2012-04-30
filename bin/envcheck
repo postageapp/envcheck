@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+# == Library Path ===========================================================
+
+SCRIPT_PATH = begin
+  script_path = __FILE__
+  
+  count = 0
+
+  while (File.lstat(script_path).symlink?)
+    script_path = File.readlink(script_path)
+    
+    count += 1
+    break if (count > 100)
+  end
+  
+  script_path
+end
+
+$LOAD_PATH << File.expand_path(File.join('..', 'lib'), File.dirname(SCRIPT_PATH))
+
+require 'envcheck'
+
+# == Main ==================================================================
+
+begin
+  puts Envcheck.report
+end
